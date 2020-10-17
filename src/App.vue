@@ -1,27 +1,92 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div id="app">
+    <button @click="changeValue">change value</button>
+<!--    <cascade :options="options" :value="value" @change="valueChange" />-->
+    <p>value: {{ value }}</p>
+    <cascade :options="options" v-model:value="value" />
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import { defineComponent, ref } from 'vue';
+import Cascade from './components/Cascade/Cascade.vue';
+
+const options = [
+  {
+    value: 'zhejiang',
+    label: 'Zhejiang',
+    children: [
+      {
+        value: 'hangzhou',
+        label: 'Hangzhou',
+        children: [
+          {
+            value: 'xihu',
+            label: 'West Lake'
+          }
+        ]
+      },
+      {
+        value: 'ningbo',
+        label: 'Ningbo'
+      }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: 'Jiangsu',
+    children: [
+      {
+        value: 'nanjing',
+        label: 'Nanjing',
+        children: [
+          {
+            value: 'zhonghuamen',
+            label: 'Zhong Hua Men'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    value: 'aomen',
+    label: 'aomen'
+  }
+];
 
 export default defineComponent({
   name: 'App',
   components: {
-    HelloWorld
+    Cascade
+  },
+  
+  setup(props, context) {
+    // const value = ref<string[]>([]);
+    const value = ref<string[]>(['zhejiang', 'ningbo']);
+    const changeValue = (): void => {
+      // value.value = ['zhejiang', 'ningbo'];
+      value.value = ['zhejiang', 'hangzhou', 'xihu'];
+    }
+    const valueChange = (newValue: string[]) => {
+      console.log('valueChange', newValue);
+    }
+    return {
+      options,
+      value,
+      changeValue,
+      valueChange
+    }
   }
 });
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  * {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  #app {
+    margin: 100px 300px;
+  }
 </style>
